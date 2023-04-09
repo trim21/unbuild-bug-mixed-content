@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-require('source-map-support').install()
+// require("source-map-support").install()
 
 import { assert } from 'chai'
 import Nock from 'nock'
 import Stream from 'stream'
-import * as Minio from '../../../dist/main/minio'
+import * as Minio from '../../main/minio.mjs'
 import {
   isValidEndpoint,
   isValidIP,
@@ -30,9 +30,9 @@ import {
   CopyDestinationOptions,
   isArray,
   calculateEvenSplits,
-} from '../../../dist/main/helpers'
+} from '../../main/helpers.mjs'
 
-var Package = require('../../../package.json')
+const Package = { version: 'development' }
 
 describe('Helpers', () => {
   it('should validate for s3 endpoint', () => {

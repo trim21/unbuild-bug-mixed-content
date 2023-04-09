@@ -1,6 +1,7 @@
 name: CI - Linux
 
 on:
+  push:
   pull_request:
     branches:
       - master
@@ -9,7 +10,8 @@ jobs:
     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
-      max-parallel: 1
+#      max-parallel: 3
+      fail-fast: false
       matrix:
         node_version: [12.x, 14.x, 16.x, 17.x, 18.x, 19.x]
         os: [ubuntu-latest]
@@ -19,9 +21,15 @@ jobs:
             fetch-depth: 0
             ref: ''
       - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
+          cache: 'npm'
+
+      - run: npm i
+
+      - run: npm run lint
+
       - name: Start Server -> Run Unit and Functional Tests ( install, lint, browserify, test)
         env:
           CI: true
@@ -38,8 +46,5 @@ jobs:
           wget --quiet -O /tmp/minio https://dl.min.io/server/minio/release/linux-amd64/minio
           chmod +x /tmp/minio
           /tmp/minio -C /tmp/minio-config server /tmp/data{1...4} &
-          npm install
-          npm run lint
-          npm run browserify
           npm run test
 

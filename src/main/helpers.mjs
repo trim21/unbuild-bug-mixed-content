@@ -16,21 +16,25 @@
 
 import stream from 'stream'
 import mime from 'mime-types'
-var Crypto = require('crypto-browserify')
-const { XMLParser } = require('fast-xml-parser')
+
 const fxp = new XMLParser()
-
-const ipaddr = require('ipaddr.js')
 import { isBrowser } from 'browser-or-node'
-
-const fs = require('fs')
-const path = require('path')
 import _ from 'lodash'
-import * as errors from './errors.js'
+import * as errors from './errors.ts'
 import querystring from 'query-string'
 
 // Returns a wrapper function that will promisify a given callback function.
 // It will preserve 'this'.
+import Crypto from 'crypto-browserify'
+
+import { XMLParser } from 'fast-xml-parser'
+
+import ipaddr from 'ipaddr.js'
+
+import fs from 'fs'
+
+import path from 'path'
+
 export function promisify(fn) {
   return function () {
     // If the last argument is a function, assume its the callback.

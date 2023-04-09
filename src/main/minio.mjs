@@ -68,26 +68,28 @@ import {
   partsRequired,
   calculateEvenSplits,
   DEFAULT_REGION,
-} from './helpers.js'
+} from './helpers.mjs'
 
-import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing.js'
+import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing.mjs'
 
-import ObjectUploader from './object-uploader'
+import ObjectUploader from './object-uploader.mjs'
 
-import * as transformers from './transformers'
+import * as transformers from './transformers.mjs'
 
-import * as errors from './errors.js'
+import * as errors from './errors.ts'
 
-import { getS3Endpoint } from './s3-endpoints.js'
+import { getS3Endpoint } from './s3-endpoints.mjs'
 
-import { NotificationConfig, NotificationPoller } from './notification'
+import { NotificationConfig, NotificationPoller } from './notification.mjs'
 
-import extensions from './extensions'
-import CredentialProvider from './CredentialProvider'
+import extensions from './extensions.mjs'
+import CredentialProvider from './CredentialProvider.mjs'
 
-import { parseSelectObjectContentResponse } from './xml-parsers'
+import { parseSelectObjectContentResponse } from './xml-parsers.mjs'
 
-var Package = require('../../package.json')
+// will be replaced by rollup plugin
+const version = process.env.MINIO_JS_PACKAGE_VERSION || 'development'
+const Package = { version }
 
 export class Client {
   constructor(params) {

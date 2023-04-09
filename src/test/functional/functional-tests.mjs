@@ -14,47 +14,36 @@
  * limitations under the License.
  */
 
-const os = require('os')
-const stream = require('stream')
-const crypto = require('crypto')
-const async = require('async')
-const _ = require('lodash')
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
-const url = require('url')
-const chai = require('chai')
+import os from 'os'
+import chai from 'chai'
+
+import http from 'http'
+import https from 'https'
+import url from 'url'
+import superagent from 'superagent'
+import splitFile from 'split-file'
+import uuid from 'uuid'
+import { step } from 'mocha-steps'
+
+import stream from 'stream'
+import async from 'async'
+import crypto from 'crypto'
+import fs from 'fs'
+import _ from 'lodash'
+
+import {
+  getVersionId,
+  isArray,
+  CopyDestinationOptions,
+  CopySourceOptions,
+  removeDirAndFiles,
+  DEFAULT_REGION,
+} from '../../main/helpers.mjs'
+
+import AssumeRoleProvider from '../../main/AssumeRoleProvider.mjs'
+import * as minio from '../../main/minio.mjs'
+
 const assert = chai.assert
-const superagent = require('superagent')
-const uuid = require('uuid')
-const splitFile = require('split-file')
-const step = require('mocha-steps').step
-
-let helpers
-try {
-  helpers = require('../../../dist/main/helpers')
-} catch (err) {
-  helpers = require('minio/dist/main/helpers')
-}
-
-let AssumeRoleProvider
-try {
-  AssumeRoleProvider = require('../../../dist/main/AssumeRoleProvider')
-} catch (err) {
-  AssumeRoleProvider = require('minio/dist/main/AssumeRoleProvider')
-}
-AssumeRoleProvider = AssumeRoleProvider.default
-
-let minio
-try {
-  minio = require('../../../dist/main/minio')
-} catch (err) {
-  minio = require('minio')
-}
-
-const { getVersionId, isArray, CopyDestinationOptions, CopySourceOptions, removeDirAndFiles, DEFAULT_REGION } = helpers
-
-require('source-map-support').install()
 
 const isWindowsPlatform = process.platform === 'win32'
 
@@ -122,7 +111,9 @@ describe('functional tests', function () {
     if (trace_func_test_file_path === 'process.stdout') {
       traceStream = process.stdout
     } else {
-      traceStream = fs.createWriteStream(trace_func_test_file_path, { flags: 'a' })
+      traceStream = fs.createWriteStream(trace_func_test_file_path, {
+        flags: 'a',
+      })
     }
     traceStream.write('====================================\n')
     client.traceOn(traceStream)
@@ -153,7 +144,9 @@ describe('functional tests', function () {
   var _5mbmd5 = crypto.createHash('md5').update(_5mb).digest('hex')
 
   // create new http agent to check requests release sockets
-  var httpAgent = (clientConfigParams.useSSL ? https : http).Agent({ keepAlive: true })
+  var httpAgent = (clientConfigParams.useSSL ? https : http).Agent({
+    keepAlive: true,
+  })
   client.setRequestOptions({ agent: httpAgent })
   var metaData = {
     'Content-Type': 'text/html',
@@ -1563,7 +1556,7 @@ describe('functional tests', function () {
     )
   })
 
-  describe('removeObjects', function () {
+  describe.only('removeObjects', function () {
     var listObjectPrefix = 'miniojsPrefix'
     var listObjectsNum = 10
     var objArray = []
@@ -1584,6 +1577,7 @@ describe('functional tests', function () {
     )
 
     step(`listObjects(bucketName, prefix, recursive)_bucketName:${bucketName}, recursive:false_`, (done) => {
+      console.log('list objects')
       client
         .listObjects(bucketName, listObjectPrefix, false)
         .on('error', done)
@@ -2033,7 +2027,9 @@ describe('functional tests', function () {
       (done) => {
         if (isVersioningSupported) {
           client
-            .listObjects(versionedBucketName, '', true, { IncludeVersion: true })
+            .listObjects(versionedBucketName, '', true, {
+              IncludeVersion: true,
+            })
             .on('error', done)
             .on('end', () => {
               if (_.isEqual(objArray.length, listPrefixArray.length)) return done()
@@ -2054,7 +2050,9 @@ describe('functional tests', function () {
         if (isVersioningSupported) {
           listPrefixArray = []
           client
-            .listObjects(versionedBucketName, prefixName, true, { IncludeVersion: true })
+            .listObjects(versionedBucketName, prefixName, true, {
+              IncludeVersion: true,
+            })
             .on('error', done)
             .on('end', () => {
               if (_.isEqual(objArray.length, listPrefixArray.length)) return done()
@@ -2149,7 +2147,9 @@ describe('functional tests', function () {
         (done) => {
           if (isVersioningSupported) {
             client
-              .listObjects(versionedBucketName, '', true, { IncludeVersion: true })
+              .listObjects(versionedBucketName, '', true, {
+                IncludeVersion: true,
+              })
               .on('error', done)
               .on('end', () => {
                 if (_.isEqual(2, objVersionList.length)) return done()
@@ -2837,7 +2837,10 @@ describe('functional tests', function () {
             client.removeObject(
               objRetentionBucket,
               retentionObjName,
-              { versionId: versionId, governanceBypass: true },
+              {
+                versionId: versionId,
+                governanceBypass: true,
+              },
               () => {
                 done()
               }
@@ -3074,7 +3077,10 @@ describe('functional tests', function () {
             client.setObjectLegalHold(
               objLegalHoldBucketName,
               objLegalHoldObjName,
-              { status: 'ON', versionId: versionId },
+              {
+                status: 'ON',
+                versionId: versionId,
+              },
               () => {
                 done()
               }
@@ -3105,7 +3111,10 @@ describe('functional tests', function () {
             client.setObjectLegalHold(
               objLegalHoldBucketName,
               objLegalHoldObjName,
-              { status: 'OFF', versionId: versionId },
+              {
+                status: 'OFF',
+                versionId: versionId,
+              },
               () => {
                 done()
               }
@@ -3136,7 +3145,10 @@ describe('functional tests', function () {
             client.removeObject(
               objLegalHoldBucketName,
               objLegalHoldObjName,
-              { versionId: versionId, governanceBypass: true },
+              {
+                versionId: versionId,
+                governanceBypass: true,
+              },
               () => {
                 done()
               }
@@ -3440,7 +3452,9 @@ describe('functional tests', function () {
           secretKey: client.secretKey,
         })
 
-        const aRoleConf = Object.assign({}, clientConfigParams, { credentialsProvider: assumeRoleProvider })
+        const aRoleConf = Object.assign({}, clientConfigParams, {
+          credentialsProvider: assumeRoleProvider,
+        })
 
         const assumeRoleClient = new minio.Client(aRoleConf)
         assumeRoleClient.region = server_region
@@ -3592,7 +3606,9 @@ describe('functional tests', function () {
       (done) => {
         if (isVersioningSupported) {
           client
-            .removeObject(bucketToTestMultipart, _100kbObjectName, { versionId: versionedObjectRes.versionId })
+            .removeObject(bucketToTestMultipart, _100kbObjectName, {
+              versionId: versionedObjectRes.versionId,
+            })
             .then(() => done())
             .catch(done)
         } else {
@@ -3632,7 +3648,9 @@ describe('functional tests', function () {
       (done) => {
         if (isVersioningSupported) {
           client
-            .removeObject(bucketToTestMultipart, _65mbObjectName, { versionId: versionedMultiPartObjectRes.versionId })
+            .removeObject(bucketToTestMultipart, _65mbObjectName, {
+              versionId: versionedMultiPartObjectRes.versionId,
+            })
             .then(() => done())
             .catch(done)
         } else {
@@ -4021,10 +4039,19 @@ describe('functional tests', function () {
           expression: 'SELECT * FROM s3object s where s."Name" = \'Jane\'',
           expressionType: 'SQL',
           inputSerialization: {
-            CSV: { FileHeaderInfo: 'Use', RecordDelimiter: '\n', FieldDelimiter: ',' },
+            CSV: {
+              FileHeaderInfo: 'Use',
+              RecordDelimiter: '\n',
+              FieldDelimiter: ',',
+            },
             CompressionType: 'NONE',
           },
-          outputSerialization: { CSV: { RecordDelimiter: '\n', FieldDelimiter: ',' } },
+          outputSerialization: {
+            CSV: {
+              RecordDelimiter: '\n',
+              FieldDelimiter: ',',
+            },
+          },
           requestProgress: { Enabled: true },
         }
 
@@ -4214,7 +4241,9 @@ describe('functional tests', function () {
         (done) => {
           if (isVersioningSupported) {
             client
-              .listObjects(fdPrefixBucketName, '/my-prefix', true, { IncludeVersion: true })
+              .listObjects(fdPrefixBucketName, '/my-prefix', true, {
+                IncludeVersion: true,
+              })
               .on('error', done)
               .on('end', () => {
                 if (_.isEqual(0, objVersionList.length)) return done()
