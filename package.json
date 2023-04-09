@@ -18,7 +18,6 @@
   },
   "prettier": {
     "printWidth": 120,
-    "singleQuote": true,
     "endOfLine": "lf",
     "semi": false
   },
