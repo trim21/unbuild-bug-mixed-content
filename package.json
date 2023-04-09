@@ -2,7 +2,9 @@
   "name": "minio",
   "version": "7.0.34",
   "description": "S3 Compatible Cloud Storage client",
-  "main": "./dist/main/minio.js",
+  "source": "./src/main/minio.mjs",
+  "main": "./dist/cjs/minio.cjs",
+  "module": "./dist/esm/minio.mjs",
   "scripts": {
     "format": "prettier -w .",
     "format-check": "prettier --list-different .",
@@ -100,6 +102,7 @@
     "superagent": "^8.0.9",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4",
+    "unbuild": "^1.2.0",
     "uuid": "^9.0.0"
   },
   "keywords": [
