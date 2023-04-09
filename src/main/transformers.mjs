@@ -16,10 +16,10 @@
 
 import Crypto from 'crypto'
 import JSONParser from 'json-stream'
-import _ from 'lodash'
+import * as _ from 'lodash'
 import Through2 from 'through2'
 
-import * as errors from './errors.mts'
+import * as errors from './errors'
 import { isFunction } from './helpers'
 import * as xmlParsers from './xml-parsers'
 

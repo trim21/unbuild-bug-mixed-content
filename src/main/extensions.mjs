@@ -16,7 +16,7 @@
 
 import Stream from 'stream'
 
-import * as errors from './errors.mts'
+import * as errors from './errors'
 import { isBoolean, isNumber, isString, isValidBucketName, isValidPrefix, pipesetup, uriEscape } from './helpers'
 import * as transformers from './transformers'
 

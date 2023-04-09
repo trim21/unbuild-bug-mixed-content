@@ -29,7 +29,7 @@ import Xml from 'xml'
 import xml2js from 'xml2js'
 
 import CredentialProvider from './CredentialProvider'
-import * as errors from './errors.mts'
+import * as errors from './errors'
 import extensions from './extensions'
 import {
   calculateEvenSplits,
@@ -3311,7 +3311,6 @@ export class Client {
 
     this.makeRequest({ method, bucketName, objectName, query, headers }, payload, [200], '', false, cb)
   }
-
   async setCredentialsProvider(credentialsProvider) {
     if (!(credentialsProvider instanceof CredentialProvider)) {
       throw new Error('Unable to get  credentials. Expected instance of CredentialProvider')
@@ -3563,7 +3562,6 @@ export class Client {
         cb(error, null)
       })
   }
-
   selectObjectContent(bucketName, objectName, selectOpts = {}, cb) {
     if (!isValidBucketName(bucketName)) {
       throw new errors.InvalidBucketNameError(`Invalid bucket name: ${bucketName}`)

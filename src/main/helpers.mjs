@@ -25,7 +25,7 @@ import path from 'path'
 import querystring from 'query-string'
 import stream from 'stream'
 
-import * as errors from './errors.mts'
+import * as errors from './errors'
 
 const fxp = new XMLParser()
 
@@ -645,7 +645,6 @@ export class CopyDestinationOptions {
     }
     return headerOptions
   }
-
   validate() {
     if (!isValidBucketName(this.Bucket)) {
       throw new errors.InvalidBucketNameError('Invalid Destination bucket name: ' + this.Bucket)
@@ -687,7 +686,6 @@ export const partsRequired = (size) => {
 
 let startIndexParts = []
 let endIndexParts = []
-
 export function calculateEvenSplits(size, objInfo) {
   if (size === 0) {
     return null
@@ -765,7 +763,6 @@ export class SelectResults {
   setStats(stats) {
     this.stats = stats
   }
-
   getStats() {
     return this.stats
   }
@@ -773,7 +770,6 @@ export class SelectResults {
   setProgress(progress) {
     this.progress = progress
   }
-
   getProgress() {
     return this.progress
   }
@@ -781,7 +777,6 @@ export class SelectResults {
   setResponse(response) {
     this.response = response
   }
-
   getResponse() {
     return this.response
   }
