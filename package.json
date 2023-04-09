@@ -13,6 +13,12 @@
     "browserify": "gulp browserify",
     "prepare": "npm run compile"
   },
+  "prettier": {
+    "printWidth": 120,
+    "singleQuote": true,
+    "endOfLine": "crlf",
+    "semi": false
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/minio/minio-js.git"
