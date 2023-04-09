@@ -1,9 +1,9 @@
 import Http from 'http'
 import Https from 'https'
-import { makeDateLong, parseXml, toSha256 } from './helpers.mjs'
-import { signV4ByServiceName } from './signing.mjs'
-import CredentialProvider from './CredentialProvider.mjs'
-import Credentials from './Credentials.mjs'
+import { makeDateLong, parseXml, toSha256 } from './helpers'
+import { signV4ByServiceName } from './signing'
+import CredentialProvider from './CredentialProvider'
+import Credentials from './Credentials'
 import { URL, URLSearchParams } from 'url'
 
 class AssumeRoleProvider extends CredentialProvider {
