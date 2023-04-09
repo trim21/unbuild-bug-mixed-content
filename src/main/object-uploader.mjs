@@ -17,7 +17,7 @@
 import { Transform } from 'stream'
 import Crypto from 'crypto'
 import * as querystring from 'query-string'
-import { getVersionId, sanitizeETag } from './helpers.mjs'
+import { getVersionId, sanitizeETag } from './helpers'
 
 // We extend Transform because Writable does not implement ._flush().
 export default class ObjectUploader extends Transform {
