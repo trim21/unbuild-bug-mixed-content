@@ -6,7 +6,7 @@
   "main": "./dist/cjs/minio.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "format": "prettier -w src *.js *.json",
+    "format": "prettier -w src *.js *.json *.cjs",
     "build": "rollup -c rollup.config.cjs",
     "test": "TS_NODE_PROJECT=./tsconfig.test.json mocha --timeout 5000",
     "lint": "eslint ./src/",
