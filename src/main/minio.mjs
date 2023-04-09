@@ -72,20 +72,20 @@ import {
 
 import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing.mjs'
 
-import ObjectUploader from './object-uploader.mjs'
+import ObjectUploader from './object-uploader'
 
-import * as transformers from './transformers.mjs'
+import * as transformers from './transformers'
 
 import * as errors from './errors.ts'
 
 import { getS3Endpoint } from './s3-endpoints.mjs'
 
-import { NotificationConfig, NotificationPoller } from './notification.mjs'
+import { NotificationConfig, NotificationPoller } from './notification'
 
-import extensions from './extensions.mjs'
-import CredentialProvider from './CredentialProvider.mjs'
+import extensions from './extensions'
+import CredentialProvider from './CredentialProvider'
 
-import { parseSelectObjectContentResponse } from './xml-parsers.mjs'
+import { parseSelectObjectContentResponse } from './xml-parsers'
 
 // will be replaced by rollup plugin
 const version = process.env.MINIO_JS_PACKAGE_VERSION || 'development'
