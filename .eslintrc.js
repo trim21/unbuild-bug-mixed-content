@@ -43,7 +43,7 @@ module.exports = {
         ObjectExpression: 'first',
       },
     ],
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['off'],
     semi: ['error', 'never'],
     'spaced-comment': [
       'error',
