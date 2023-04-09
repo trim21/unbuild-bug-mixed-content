@@ -6,20 +6,29 @@
   "main": "./dist/cjs/minio.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "format": "prettier -w src *.js *.json *.cjs",
-    "format-check": "prettier --list-different ./src *.js *.json *.cjs",
+    "format": "prettier -w .",
+    "format-check": "prettier --list-different .",
     "build": "rollup -c rollup.config.cjs",
     "test": "mocha --timeout 5000",
     "lint": "eslint ./src/",
     "lint-fix": " eslint ./src/ --fix",
     "prepublishOnly": "gulp test",
     "functional": "mocha src/test/functional/functional-tests.mjs",
-    "browserify": "browserify ./dist/cjs/minio.js --outfile ./dist/browser/minio.js -s Minio"
+    "browserify": "browserify ./dist/cjs/minio.js --outfile ./dist/browser/minio.js -s Minio",
+    "lint-staged": "lint-staged"
   },
   "prettier": {
     "printWidth": 120,
     "endOfLine": "lf",
     "semi": false
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,cts,mjs,json,yaml,yml}": [
+      "prettier --write"
+    ],
+    "*.{js,cjs,mjs,ts,cts,mjs}": [
+      "eslint --fix"
+    ]
   },
   "repository": {
     "type": "git",
@@ -74,6 +83,7 @@
     "dotenv": "^16.0.3",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
+    "lint-staged": "^13.2.1",
     "mocha": "^9.2.0",
     "mocha-steps": "^1.1.0",
     "nock": "^13.2.2",
