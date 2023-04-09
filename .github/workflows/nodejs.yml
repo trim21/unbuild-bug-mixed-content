@@ -7,28 +7,27 @@ on:
       - master
 jobs:
   build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
-      runs-on: ${{ matrix.os }}
-      strategy:
-        fail-fast: false
-        matrix:
-          node_version: [ 12.x, 14.x, 16.x, 17.x, 18.x, 19.x ]
-          os: [ ubuntu-latest ]
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node_version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node_version }}
-            cache: 'npm'
+    name: Build on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [ 12.x, 14.x, 16.x, 17.x, 18.x, 19.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: 'npm'
 
-        - run: npm i
+      - run: npm i
 
-        - run: npm run lint
+      - run: npm run lint
 
-        - run: npm run build
+      - run: npm run build
 
-        - run: npm run browserify
+      - run: npm run browserify
 
 
   test:
@@ -37,8 +36,8 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        node_version: [12.x, 14.x, 16.x, 17.x, 18.x, 19.x]
-        os: [ubuntu-latest]
+        node_version: [ 12.x, 14.x, 16.x, 17.x, 18.x, 19.x ]
+        os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node_version }}
