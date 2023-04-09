@@ -18,7 +18,7 @@ import Stream from 'stream'
 
 import * as transformers from './transformers.mjs'
 
-import * as errors from './errors.mjs'
+import * as errors from './errors.mts'
 
 import { isValidPrefix, isValidBucketName, uriEscape, isBoolean, isNumber, isString, pipesetup } from './helpers.mjs'
 

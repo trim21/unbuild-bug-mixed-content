@@ -17,7 +17,7 @@
 import Crypto from 'crypto'
 import _ from 'lodash'
 import { uriEscape, getScope, isString, isObject, isArray, isNumber, makeDateShort, makeDateLong } from './helpers.mjs'
-import * as errors from './errors.mjs'
+import * as errors from './errors.mts'
 
 const signV4Algorithm = 'AWS4-HMAC-SHA256'
 

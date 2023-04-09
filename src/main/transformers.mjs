@@ -21,7 +21,7 @@ import Crypto from 'crypto'
 import JSONParser from 'json-stream'
 
 import { isFunction } from './helpers.mjs'
-import * as errors from './errors.mjs'
+import * as errors from './errors.mts'
 
 // getConcater returns a stream that concatenates the input and emits
 // the concatenated output when 'end' has reached. If an optional

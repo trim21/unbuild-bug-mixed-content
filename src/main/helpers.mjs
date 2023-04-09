@@ -26,7 +26,7 @@ import { isBrowser } from 'browser-or-node'
 import _ from 'lodash'
 import querystring from 'query-string'
 
-import * as errors from './errors.mjs'
+import * as errors from './errors.mts'
 
 const fxp = new XMLParser()
 
