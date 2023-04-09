@@ -76,7 +76,7 @@ import ObjectUploader from './object-uploader'
 
 import * as transformers from './transformers'
 
-import * as errors from './errors.ts'
+import * as errors from './errors.mjs'
 
 import { getS3Endpoint } from './s3-endpoints.mjs'
 

@@ -20,13 +20,13 @@ import stream from 'stream'
 
 import mime from 'mime-types'
 import Crypto from 'crypto-browserify'
-import {XMLParser} from 'fast-xml-parser'
+import { XMLParser } from 'fast-xml-parser'
 import ipaddr from 'ipaddr.js'
-import {isBrowser} from 'browser-or-node'
+import { isBrowser } from 'browser-or-node'
 import _ from 'lodash'
 import querystring from 'query-string'
 
-import * as errors from './errors.ts'
+import * as errors from './errors.mjs'
 
 const fxp = new XMLParser()
 
@@ -292,8 +292,7 @@ export function pipesetup(...streams) {
 // return a Readable stream that emits data
 export function readableStream(data) {
   var s = new stream.Readable()
-  s._read = () => {
-  }
+  s._read = () => {}
   s.push(data)
   s.push(null)
   return s
@@ -380,7 +379,7 @@ export function getSourceVersionId(headers = {}) {
 }
 
 export function sanitizeETag(etag = '') {
-  var replaceChars = {'"': '', '&quot;': '', '&#34;': '', '&QUOT;': '', '&#x00022': ''}
+  var replaceChars = { '"': '', '&quot;': '', '&#34;': '', '&QUOT;': '', '&#x00022': '' }
   return etag.replace(/^("|&quot;|&#34;)|("|&quot;|&#34;)$/g, (m) => replaceChars[m])
 }
 
@@ -616,8 +615,8 @@ export class CopyDestinationOptions {
       headerOptions['X-Amz-Tagging'] = isObject(userTags)
         ? querystring.stringify(userTags)
         : isString(userTags)
-          ? userTags
-          : ''
+        ? userTags
+        : ''
     }
 
     if (!_.isEmpty(this.Mode)) {
@@ -722,7 +721,7 @@ export function calculateEvenSplits(size, objInfo) {
     endIndexParts[i] = currentEnd
   }
 
-  return {startIndex: startIndexParts, endIndex: endIndexParts, objInfo: objInfo}
+  return { startIndex: startIndexParts, endIndex: endIndexParts, objInfo: objInfo }
 }
 
 export function removeDirAndFiles(dirPath, removeSelf) {

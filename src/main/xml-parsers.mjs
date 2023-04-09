@@ -17,7 +17,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 const fxp = new XMLParser()
 import _ from 'lodash'
-import * as errors from './errors.ts'
+import * as errors from './errors.mjs'
 import {
   isObject,
   sanitizeETag,
