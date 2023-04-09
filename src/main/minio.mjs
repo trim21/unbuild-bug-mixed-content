@@ -75,7 +75,7 @@ import {
 import { NotificationConfig, NotificationPoller } from "./notification"
 import ObjectUploader from "./object-uploader"
 import { getS3Endpoint } from "./s3-endpoints"
-import { postPresignSignatureV4,presignSignatureV4, signV4 } from "./signing"
+import { postPresignSignatureV4, presignSignatureV4, signV4 } from "./signing"
 import * as transformers from "./transformers"
 import { parseSelectObjectContentResponse } from "./xml-parsers"
 
