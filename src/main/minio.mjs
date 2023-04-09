@@ -68,9 +68,9 @@ import {
   partsRequired,
   calculateEvenSplits,
   DEFAULT_REGION,
-} from './helpers.mjs'
+} from './helpers'
 
-import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing.mjs'
+import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing'
 
 import ObjectUploader from './object-uploader'
 
@@ -78,7 +78,7 @@ import * as transformers from './transformers'
 
 import * as errors from './errors.mts'
 
-import { getS3Endpoint } from './s3-endpoints.mjs'
+import { getS3Endpoint } from './s3-endpoints'
 
 import { NotificationConfig, NotificationPoller } from './notification'
 

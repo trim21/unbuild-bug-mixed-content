@@ -27,7 +27,7 @@ import {
   parseXml,
   readableStream,
   SelectResults,
-} from './helpers.mjs'
+} from './helpers'
 import crc32 from 'buffer-crc32'
 // Parse XML and return information as Javascript types
 

@@ -19,7 +19,7 @@
 import { assert } from 'chai'
 import Nock from 'nock'
 import Stream from 'stream'
-import * as Minio from '../../main/minio.mjs'
+import * as Minio from '../../main/minio'
 import {
   isValidEndpoint,
   isValidIP,
@@ -30,7 +30,7 @@ import {
   CopyDestinationOptions,
   isArray,
   calculateEvenSplits,
-} from '../../main/helpers.mjs'
+} from '../../main/helpers'
 
 const Package = { version: 'development' }
 

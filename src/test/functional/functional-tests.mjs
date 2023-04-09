@@ -38,10 +38,10 @@ import {
   CopySourceOptions,
   removeDirAndFiles,
   DEFAULT_REGION,
-} from '../../main/helpers.mjs'
+} from '../../main/helpers'
 
-import AssumeRoleProvider from '../../main/AssumeRoleProvider.mjs'
-import * as minio from '../../main/minio.mjs'
+import AssumeRoleProvider from '../../main/AssumeRoleProvider'
+import * as minio from '../../main/minio'
 
 const assert = chai.assert
 
@@ -1556,7 +1556,7 @@ describe('functional tests', function () {
     )
   })
 
-  describe.only('removeObjects', function () {
+  describe('removeObjects', function () {
     var listObjectPrefix = 'miniojsPrefix'
     var listObjectsNum = 10
     var objArray = []
