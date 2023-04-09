@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { Transform } from "stream"
 import Crypto from "crypto"
 import * as querystring from "query-string"
+import { Transform } from "stream"
+
 import { getVersionId, sanitizeETag } from "./helpers"
 
 // We extend Transform because Writable does not implement ._flush().

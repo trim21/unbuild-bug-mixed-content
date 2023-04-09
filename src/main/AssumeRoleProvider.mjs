@@ -1,10 +1,11 @@
 import Http from "http"
 import Https from "https"
-import { makeDateLong, parseXml, toSha256 } from "./helpers"
-import { signV4ByServiceName } from "./signing"
+import { URL, URLSearchParams } from "url"
+
 import CredentialProvider from "./CredentialProvider"
 import Credentials from "./Credentials"
-import { URL, URLSearchParams } from "url"
+import { makeDateLong, parseXml, toSha256 } from "./helpers"
+import { signV4ByServiceName } from "./signing"
 
 class AssumeRoleProvider extends CredentialProvider {
   constructor({

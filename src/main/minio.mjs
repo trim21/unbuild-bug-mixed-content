@@ -14,77 +14,69 @@
  * limitations under the License.
  */
 
+import async from "async"
+import BlockStream2 from "block-stream2"
 import fs from "fs"
 import Http from "http"
 import Https from "https"
-import Stream from "stream"
-import BlockStream2 from "block-stream2"
-import Xml from "xml"
-import xml2js from "xml2js"
-import async from "async"
-import querystring from "query-string"
+import _ from "lodash"
 import mkdirp from "mkdirp"
 import path from "path"
-import _ from "lodash"
+import querystring from "query-string"
+import Stream from "stream"
 import { TextEncoder } from "web-encoding"
+import Xml from "xml"
+import xml2js from "xml2js"
 
+import CredentialProvider from "./CredentialProvider"
+import * as errors from "./errors.mts"
+import extensions from "./extensions"
 import {
+  calculateEvenSplits,
+  CopyDestinationOptions,
+  CopySourceOptions,
+  DEFAULT_REGION,
   extractMetadata,
-  prependXAMZMeta,
-  isValidPrefix,
-  isValidEndpoint,
-  isValidBucketName,
-  isValidPort,
-  isValidObjectName,
-  isAmazonEndpoint,
   getScope,
-  uriEscape,
-  uriResourceEscape,
+  getSourceVersionId,
+  getVersionId,
+  insertContentType,
+  isAmazonEndpoint,
+  isArray,
   isBoolean,
   isFunction,
   isNumber,
-  isString,
   isObject,
-  isArray,
-  isValidDate,
-  pipesetup,
-  readableStream,
   isReadableStream,
+  isString,
+  isValidBucketName,
+  isValidDate,
+  isValidEndpoint,
+  isValidObjectName,
+  isValidPort,
+  isValidPrefix,
   isVirtualHostStyle,
-  insertContentType,
+  LEGAL_HOLD_STATUS,
   makeDateLong,
+  PART_CONSTRAINTS,
+  partsRequired,
+  pipesetup,
+  prependXAMZMeta,
   promisify,
-  getVersionId,
+  readableStream,
+  RETENTION_MODES,
+  RETENTION_VALIDITY_UNITS,
   sanitizeETag,
   toMd5,
   toSha256,
-  RETENTION_MODES,
-  RETENTION_VALIDITY_UNITS,
-  LEGAL_HOLD_STATUS,
-  CopySourceOptions,
-  CopyDestinationOptions,
-  getSourceVersionId,
-  PART_CONSTRAINTS,
-  partsRequired,
-  calculateEvenSplits,
-  DEFAULT_REGION,
+  uriEscape,
+  uriResourceEscape,
 } from "./helpers"
-
-import { signV4, presignSignatureV4, postPresignSignatureV4 } from "./signing"
-
-import ObjectUploader from "./object-uploader"
-
-import * as transformers from "./transformers"
-
-import * as errors from "./errors.mts"
-
-import { getS3Endpoint } from "./s3-endpoints"
-
 import { NotificationConfig, NotificationPoller } from "./notification"
-
-import extensions from "./extensions"
-import CredentialProvider from "./CredentialProvider"
-
+import ObjectUploader from "./object-uploader"
+import { getS3Endpoint } from "./s3-endpoints"
+import { postPresignSignatureV4,presignSignatureV4, signV4 } from "./signing"
+import * as transformers from "./transformers"
 import { parseSelectObjectContentResponse } from "./xml-parsers"
 
 // will be replaced by rollup plugin
@@ -3835,5 +3827,5 @@ export class PostPolicy {
   }
 }
 
-export * from "./notification"
 export * from "./helpers"
+export * from "./notification"

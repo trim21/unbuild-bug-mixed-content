@@ -12,7 +12,7 @@ module.exports = {
     "prettier", // This should be the last entry.
   ],
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "simple-import-sort"],
   parserOptions: {
     sourceType: "module",
     ecmaVersion: 8,
@@ -32,17 +32,9 @@ module.exports = {
     "rest-spread-spacing": 0, // ["error", "never"],
     "no-multi-spaces": 0, // ["warn", { ignoreEOLComments: false }],
 
-    indent: [
-      "off",
-      2,
-      {
-        FunctionDeclaration: { parameters: "first" },
-        FunctionExpression: { parameters: "first" },
-        CallExpression: { arguments: "first" },
-        ArrayExpression: "first",
-        ObjectExpression: "first",
-      },
-    ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    indent: "off",
     "linebreak-style": ["error", "unix"],
     semi: ["error", "never"],
     "spaced-comment": [

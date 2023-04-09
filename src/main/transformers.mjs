@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import * as xmlParsers from "./xml-parsers"
-import _ from "lodash"
-import Through2 from "through2"
 import Crypto from "crypto"
 import JSONParser from "json-stream"
+import _ from "lodash"
+import Through2 from "through2"
 
-import { isFunction } from "./helpers"
 import * as errors from "./errors.mts"
+import { isFunction } from "./helpers"
+import * as xmlParsers from "./xml-parsers"
 
 // getConcater returns a stream that concatenates the input and emits
 // the concatenated output when 'end' has reached. If an optional

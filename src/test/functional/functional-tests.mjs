@@ -14,33 +14,30 @@
  * limitations under the License.
  */
 
-import os from "os"
-import chai from "chai"
-
-import http from "http"
-import https from "https"
-import url from "url"
-import superagent from "superagent"
-import splitFile from "split-file"
-import uuid from "uuid"
-import { step } from "mocha-steps"
-
-import stream from "stream"
 import async from "async"
+import chai from "chai"
 import crypto from "crypto"
 import fs from "fs"
+import http from "http"
+import https from "https"
 import _ from "lodash"
-
-import {
-  getVersionId,
-  isArray,
-  CopyDestinationOptions,
-  CopySourceOptions,
-  removeDirAndFiles,
-  DEFAULT_REGION,
-} from "../../main/helpers"
+import { step } from "mocha-steps"
+import os from "os"
+import splitFile from "split-file"
+import stream from "stream"
+import superagent from "superagent"
+import url from "url"
+import uuid from "uuid"
 
 import AssumeRoleProvider from "../../main/AssumeRoleProvider"
+import {
+  CopyDestinationOptions,
+  CopySourceOptions,
+  DEFAULT_REGION,
+  getVersionId,
+  isArray,
+  removeDirAndFiles,
+} from "../../main/helpers"
 import * as minio from "../../main/minio"
 
 const assert = chai.assert
@@ -1577,7 +1574,6 @@ describe("functional tests", function () {
     )
 
     step(`listObjects(bucketName, prefix, recursive)_bucketName:${bucketName}, recursive:false_`, (done) => {
-      console.log("list objects")
       client
         .listObjects(bucketName, listObjectPrefix, false)
         .on("error", done)

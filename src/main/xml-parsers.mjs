@@ -16,19 +16,20 @@
 import { XMLParser } from "fast-xml-parser"
 
 const fxp = new XMLParser()
+import crc32 from "buffer-crc32"
 import _ from "lodash"
+
 import * as errors from "./errors.mts"
 import {
   isObject,
-  sanitizeETag,
-  toArray,
-  sanitizeObjectKey,
-  RETENTION_VALIDITY_UNITS,
   parseXml,
   readableStream,
+  RETENTION_VALIDITY_UNITS,
+  sanitizeETag,
+  sanitizeObjectKey,
   SelectResults,
+  toArray,
 } from "./helpers"
-import crc32 from "buffer-crc32"
 // Parse XML and return information as Javascript types
 
 // parse error XML response

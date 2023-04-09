@@ -15,8 +15,9 @@
  */
 
 import { EventEmitter } from "events"
-import * as transformers from "./transformers"
+
 import { DEFAULT_REGION, pipesetup, uriEscape } from "./helpers"
+import * as transformers from "./transformers"
 
 // Notification config - array of target configs.
 // Target configs can be

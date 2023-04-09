@@ -19,18 +19,19 @@
 import { assert } from "chai"
 import Nock from "nock"
 import Stream from "stream"
-import * as Minio from "../../main/minio"
+
 import {
+  calculateEvenSplits,
+  CopyDestinationOptions,
+  CopySourceOptions,
+  isArray,
   isValidEndpoint,
   isValidIP,
   makeDateLong,
   makeDateShort,
   partsRequired,
-  CopySourceOptions,
-  CopyDestinationOptions,
-  isArray,
-  calculateEvenSplits,
 } from "../../main/helpers"
+import * as Minio from "../../main/minio"
 
 const Package = { version: "development" }
 
