@@ -16,8 +16,8 @@
 
 import Stream from 'stream'
 
-import * as errors from './errors'
-import { isBoolean, isNumber, isString, isValidBucketName, isValidPrefix, pipesetup, uriEscape } from './helpers'
+import * as errors from './errors.js'
+import { isBoolean, isNumber, isString, isValidBucketName, isValidPrefix, pipesetup, uriEscape } from './helpers.js'
 import * as transformers from './transformers'
 
 export default class extensions {

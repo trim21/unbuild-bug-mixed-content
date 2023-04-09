@@ -2,9 +2,7 @@
   "name": "minio",
   "version": "7.0.34",
   "description": "S3 Compatible Cloud Storage client",
-  "source": "src/main/minio.ts",
-  "main": "./dist/cjs/minio.js",
-  "module": "dist/esm/index.js",
+  "main": "./dist/main/minio.js",
   "scripts": {
     "format": "prettier -w .",
     "format-check": "prettier --list-different .",
@@ -25,10 +23,10 @@
     "semi": false
   },
   "lint-staged": {
-    "*.{js,cjs,mjs,ts,cts,mjs,json,yaml,yml}": [
+    "*.{js,cjs,mjs,ts,cts,mts,json,yaml,yml}": [
       "prettier --write"
     ],
-    "src/**/*.{js,cjs,mjs,ts,cts,mjs}": [
+    "src/**/*.{js,cjs,mjs,ts,cts,mts}": [
       "eslint --fix"
     ]
   },
@@ -82,10 +80,8 @@
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",
     "chai": "^4.2.0",
-    "dotenv": "^16.0.3",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
@@ -99,7 +95,6 @@
     "mocha-steps": "^1.1.0",
     "nock": "^13.2.2",
     "prettier": "^2.8.7",
-    "rollup-plugin-node-externals": "^5.1.2",
     "source-map-support": "^0.5.13",
     "split-file": "^2.2.2",
     "superagent": "^8.0.9",

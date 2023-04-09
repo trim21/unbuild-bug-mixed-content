@@ -29,7 +29,7 @@ import Xml from 'xml'
 import xml2js from 'xml2js'
 
 import CredentialProvider from './CredentialProvider'
-import * as errors from './errors'
+import * as errors from './errors.js'
 import extensions from './extensions'
 import {
   calculateEvenSplits,
@@ -71,11 +71,11 @@ import {
   toSha256,
   uriEscape,
   uriResourceEscape,
-} from './helpers'
+} from './helpers.js'
 import { NotificationConfig, NotificationPoller } from './notification'
 import ObjectUploader from './object-uploader'
-import { getS3Endpoint } from './s3-endpoints'
-import { postPresignSignatureV4, presignSignatureV4, signV4 } from './signing'
+import { getS3Endpoint } from './s3-endpoints.js'
+import { postPresignSignatureV4, presignSignatureV4, signV4 } from './signing.js'
 import * as transformers from './transformers'
 import { parseSelectObjectContentResponse } from './xml-parsers'
 
