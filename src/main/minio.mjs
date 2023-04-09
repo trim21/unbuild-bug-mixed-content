@@ -26,7 +26,7 @@ import querystring from 'query-string'
 import mkdirp from 'mkdirp'
 import path from 'path'
 import _ from 'lodash'
-import {TextEncoder} from 'web-encoding'
+import { TextEncoder } from 'web-encoding'
 
 import {
   extractMetadata,
@@ -70,7 +70,7 @@ import {
   DEFAULT_REGION,
 } from './helpers.mjs'
 
-import {signV4, presignSignatureV4, postPresignSignatureV4} from './signing.mjs'
+import { signV4, presignSignatureV4, postPresignSignatureV4 } from './signing.mjs'
 
 import ObjectUploader from './object-uploader'
 
@@ -78,18 +78,18 @@ import * as transformers from './transformers'
 
 import * as errors from './errors.mts'
 
-import {getS3Endpoint} from './s3-endpoints.mjs'
+import { getS3Endpoint } from './s3-endpoints.mjs'
 
-import {NotificationConfig, NotificationPoller} from './notification'
+import { NotificationConfig, NotificationPoller } from './notification'
 
 import extensions from './extensions'
 import CredentialProvider from './CredentialProvider'
 
-import {parseSelectObjectContentResponse} from './xml-parsers'
+import { parseSelectObjectContentResponse } from './xml-parsers'
 
 // will be replaced by rollup plugin
 const version = process.env.MINIO_JS_PACKAGE_VERSION || 'development'
-const Package = {version}
+const Package = { version }
 
 export class Client {
   constructor(params) {
@@ -288,7 +288,7 @@ export class Client {
     var headers = opts.headers
     var query = opts.query
 
-    var reqOptions = {method}
+    var reqOptions = { method }
     reqOptions.headers = {}
 
     // Verify if virtual host supported.
@@ -383,7 +383,7 @@ export class Client {
       return this.partSize
     }
     var partSize = this.partSize
-    for (; ;) {
+    for (;;) {
       // while(true) {...} throws linting error.
       // If partSize is big enough to accomodate the object size, then use it.
       if (partSize * 10000 > size) {
@@ -555,8 +555,7 @@ export class Client {
         if (returnResponse) return cb(null, response)
         // We drain the socket so that the connection gets closed. Note that this
         // is not expensive as the socket will not have any data.
-        response.on('data', () => {
-        })
+        response.on('data', () => {})
         cb(null)
       })
       let pipe = pipesetup(stream, req)
@@ -619,12 +618,12 @@ export class Client {
     //   obtained region.
     var pathStyle = this.pathStyle && typeof window === 'undefined'
 
-    this.makeRequest({method, bucketName, query, pathStyle}, '', [200], DEFAULT_REGION, true, (e, response) => {
+    this.makeRequest({ method, bucketName, query, pathStyle }, '', [200], DEFAULT_REGION, true, (e, response) => {
       if (e) {
         if (e.name === 'AuthorizationHeaderMalformed') {
           var region = e.Region
           if (!region) return cb(e)
-          this.makeRequest({method, bucketName, query}, '', [200], region, true, (e, response) => {
+          this.makeRequest({ method, bucketName, query }, '', [200], region, true, (e, response) => {
             if (e) return cb(e)
             extractRegion(response)
           })
@@ -714,14 +713,14 @@ export class Client {
       if (err && (region === '' || region === DEFAULT_REGION)) {
         if (err.code === 'AuthorizationHeaderMalformed' && err.region !== '') {
           // Retry with region returned as part of error
-          this.makeRequest({method, bucketName, headers}, payload, [200], err.region, false, cb)
+          this.makeRequest({ method, bucketName, headers }, payload, [200], err.region, false, cb)
         } else {
           return cb && cb(err)
         }
       }
       return cb && cb(err)
     }
-    this.makeRequest({method, bucketName, headers}, payload, [200], region, false, processWithRetry)
+    this.makeRequest({ method, bucketName, headers }, payload, [200], region, false, processWithRetry)
   }
 
   // Returns a stream that emits objects that are partially uploaded.
@@ -742,7 +741,7 @@ export class Client {
       throw new TypeError('callback should be of type "function"')
     }
     var method = 'GET'
-    this.makeRequest({method}, '', [200], DEFAULT_REGION, true, (e, response) => {
+    this.makeRequest({ method }, '', [200], DEFAULT_REGION, true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getListBucketTransformer()
       var buckets
@@ -776,7 +775,7 @@ export class Client {
     var uploadIdMarker = ''
     var uploads = []
     var ended = false
-    var readStream = Stream.Readable({objectMode: true})
+    var readStream = Stream.Readable({ objectMode: true })
     readStream._read = () => {
       // push one upload info per _read()
       if (uploads.length) {
@@ -831,7 +830,7 @@ export class Client {
       throw new TypeError('callback should be of type "function"')
     }
     var method = 'HEAD'
-    this.makeRequest({method, bucketName}, '', [200], '', false, (err) => {
+    this.makeRequest({ method, bucketName }, '', [200], '', false, (err) => {
       if (err) {
         if (err.code == 'NoSuchBucket' || err.code == 'NotFound') return cb(null, false)
         return cb(err)
@@ -855,7 +854,7 @@ export class Client {
       throw new TypeError('callback should be of type "function"')
     }
     var method = 'DELETE'
-    this.makeRequest({method, bucketName}, '', [204], '', false, (e) => {
+    this.makeRequest({ method, bucketName }, '', [204], '', false, (e) => {
       // If the bucket was successfully removed, remove the region map entry.
       if (!e) delete this.regionMap[bucketName]
       cb(e)
@@ -893,7 +892,7 @@ export class Client {
       (cb) => {
         var method = 'DELETE'
         var query = `uploadId=${removeUploadId}`
-        this.makeRequest({method, bucketName, objectName, query}, '', [204], '', false, (e) => cb(e))
+        this.makeRequest({ method, bucketName, objectName, query }, '', [204], '', false, (e) => cb(e))
       },
       cb
     )
@@ -952,11 +951,11 @@ export class Client {
           fs.stat(partFile, (e, stats) => {
             var offset = 0
             if (e) {
-              partFileStream = fs.createWriteStream(partFile, {flags: 'w'})
+              partFileStream = fs.createWriteStream(partFile, { flags: 'w' })
             } else {
               if (objStat.size === stats.size) return rename()
               offset = stats.size
-              partFileStream = fs.createWriteStream(partFile, {flags: 'a'})
+              partFileStream = fs.createWriteStream(partFile, { flags: 'a' })
             }
             this.getPartialObject(bucketName, objectName, offset, 0, getOpts, cb)
           })
@@ -1066,7 +1065,7 @@ export class Client {
     var method = 'GET'
 
     var query = querystring.stringify(getOpts)
-    this.makeRequest({method, bucketName, objectName, headers, query}, '', expectedStatusCodes, '', true, cb)
+    this.makeRequest({ method, bucketName, objectName, headers, query }, '', expectedStatusCodes, '', true, cb)
   }
 
   // Uploads the object.
@@ -1141,7 +1140,7 @@ export class Client {
             var end = size - 1
             var autoClose = true
             if (size === 0) end = 0
-            var options = {start, end, autoClose}
+            var options = { start, end, autoClose }
             pipesetup(fs.createReadStream(filePath, options), hash)
               .on('data', (data) => {
                 var md5sum = data.md5sum
@@ -1201,14 +1200,14 @@ export class Client {
               var start = uploadedSize
               var end = uploadedSize + length - 1
               var autoClose = true
-              var options = {autoClose, start, end}
+              var options = { autoClose, start, end }
               // verify md5sum of each part
               pipesetup(fs.createReadStream(filePath, options), hash)
                 .on('data', (data) => {
                   var md5sumHex = Buffer.from(data.md5sum, 'base64').toString('hex')
                   if (part && md5sumHex === part.etag) {
                     // md5 matches, chunk already uploaded
-                    partsDone.push({part: partNumber, etag: part.etag})
+                    partsDone.push({ part: partNumber, etag: part.etag })
                     partNumber++
                     uploadedSize += length
                     return cb()
@@ -1217,7 +1216,7 @@ export class Client {
                   var stream = fs.createReadStream(filePath, options)
                   uploader(uploadId, partNumber, stream, length, data.sha256sum, data.md5sum, (e, objInfo) => {
                     if (e) return cb(e)
-                    partsDone.push({part: partNumber, etag: objInfo.etag})
+                    partsDone.push({ part: partNumber, etag: objInfo.etag })
                     partNumber++
                     uploadedSize += length
                     return cb()
@@ -1300,7 +1299,7 @@ export class Client {
     // s3 requires that all non-end chunks be at least `this.partSize`,
     // so we chunk the stream until we hit either that size or the end before
     // we flush it to s3.
-    let chunker = new BlockStream2({size, zeroPadding: false})
+    let chunker = new BlockStream2({ size, zeroPadding: false })
 
     // This is a Writable stream that can be written to in order to upload
     // to the specified bucket and object automatically.
@@ -1358,7 +1357,7 @@ export class Client {
     }
 
     var method = 'PUT'
-    this.makeRequest({method, bucketName, objectName, headers}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, headers }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getCopyObjectTransformer()
       pipesetup(response, transformer)
@@ -1397,7 +1396,7 @@ export class Client {
     const objectName = destConfig.Object
 
     const method = 'PUT'
-    this.makeRequest({method, bucketName, objectName, headers}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, headers }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
       const transformer = transformers.getCopyObjectTransformer()
       pipesetup(response, transformer)
@@ -1458,7 +1457,7 @@ export class Client {
     if (!isString(marker)) {
       throw new TypeError('marker should be of type "string"')
     }
-    let {Delimiter, MaxKeys, IncludeVersion} = listQueryOpts
+    let { Delimiter, MaxKeys, IncludeVersion } = listQueryOpts
 
     if (!isObject(listQueryOpts)) {
       throw new TypeError('listQueryOpts should be of type "object"')
@@ -1505,7 +1504,7 @@ export class Client {
 
     var method = 'GET'
     var transformer = transformers.getListObjectsTransformer()
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return transformer.emit('error', e)
       pipesetup(response, transformer)
     })
@@ -1549,7 +1548,7 @@ export class Client {
     }
     var objects = []
     var ended = false
-    var readStream = Stream.Readable({objectMode: true})
+    var readStream = Stream.Readable({ objectMode: true })
     readStream._read = () => {
       // push one object per _read()
       if (objects.length) {
@@ -1641,7 +1640,7 @@ export class Client {
     }
     var method = 'GET'
     var transformer = transformers.getListObjectsV2Transformer()
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return transformer.emit('error', e)
       pipesetup(response, transformer)
     })
@@ -1685,7 +1684,7 @@ export class Client {
     var continuationToken = ''
     var objects = []
     var ended = false
-    var readStream = Stream.Readable({objectMode: true})
+    var readStream = Stream.Readable({ objectMode: true })
     readStream._read = () => {
       // push one object per _read()
       if (objects.length) {
@@ -1739,13 +1738,12 @@ export class Client {
 
     var query = querystring.stringify(statOpts)
     var method = 'HEAD'
-    this.makeRequest({method, bucketName, objectName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       // We drain the socket so that the connection gets closed. Note that this
       // is not expensive as the socket will not have any data.
-      response.on('data', () => {
-      })
+      response.on('data', () => {})
 
       const result = {
         size: +response.headers['content-length'],
@@ -1803,7 +1801,7 @@ export class Client {
 
     const query = querystring.stringify(queryParams)
 
-    let requestOptions = {method, bucketName, objectName, headers}
+    let requestOptions = { method, bucketName, objectName, headers }
     if (query) {
       requestOptions['query'] = query
     }
@@ -1840,7 +1838,7 @@ export class Client {
         }
         return result
       },
-      {listOfList: [], list: []}
+      { listOfList: [], list: [] }
     )
 
     if (result.list.length > 0) {
@@ -1855,20 +1853,20 @@ export class Client {
         var objects = []
         list.forEach(function (value) {
           if (isObject(value)) {
-            objects.push({Key: value.name, VersionId: value.versionId})
+            objects.push({ Key: value.name, VersionId: value.versionId })
           } else {
-            objects.push({Key: value})
+            objects.push({ Key: value })
           }
         })
-        let deleteObjects = {Delete: {Quiet: true, Object: objects}}
-        const builder = new xml2js.Builder({headless: true})
+        let deleteObjects = { Delete: { Quiet: true, Object: objects } }
+        const builder = new xml2js.Builder({ headless: true })
         let payload = builder.buildObject(deleteObjects)
         payload = encoder.encode(payload)
         const headers = {}
 
         headers['Content-MD5'] = toMd5(payload)
 
-        this.makeRequest({method, bucketName, query, headers}, payload, [200], '', true, (e, response) => {
+        this.makeRequest({ method, bucketName, query, headers }, payload, [200], '', true, (e, response) => {
           if (e) return cb(e)
           let removeObjectsResult
           pipesetup(response, transformers.removeObjectsTransformer())
@@ -1903,7 +1901,7 @@ export class Client {
 
     let method = 'GET'
     let query = 'policy'
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let policy = Buffer.from('')
@@ -1946,7 +1944,7 @@ export class Client {
       method = 'PUT'
     }
 
-    this.makeRequest({method, bucketName, query}, policy, [204], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, policy, [204], '', false, cb)
   }
 
   // Generate a presigned URL for GET
@@ -1995,7 +1993,7 @@ export class Client {
       // This statement is added to ensure that we send error through
       // callback on presign failure.
       var url
-      var reqOptions = this.getRequestOptions({method, region, bucketName, objectName, query})
+      var reqOptions = this.getRequestOptions({ method, region, bucketName, objectName, query })
 
       this.checkAndRefreshCreds()
       try {
@@ -2126,7 +2124,7 @@ export class Client {
       var reqOptions = this.getRequestOptions(opts)
       var portStr = this.port == 80 || this.port === 443 ? '' : `:${this.port.toString()}`
       var urlStr = `${reqOptions.protocol}//${reqOptions.host}${portStr}${reqOptions.path}`
-      cb(null, {postURL: urlStr, formData: postPolicy.formData})
+      cb(null, { postURL: urlStr, formData: postPolicy.formData })
     })
   }
 
@@ -2146,7 +2144,7 @@ export class Client {
     var method = 'POST'
     let headers = Object.assign({}, metaData)
     var query = 'uploads'
-    this.makeRequest({method, bucketName, objectName, query, headers}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query, headers }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getInitiateMultipartTransformer()
       pipesetup(response, transformer)
@@ -2195,10 +2193,10 @@ export class Client {
       })
     })
 
-    var payloadObject = {CompleteMultipartUpload: parts}
+    var payloadObject = { CompleteMultipartUpload: parts }
     var payload = Xml(payloadObject)
 
-    this.makeRequest({method, bucketName, objectName, query}, payload, [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, payload, [200], '', true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getCompleteMultipartTransformer()
       pipesetup(response, transformer)
@@ -2277,7 +2275,7 @@ export class Client {
     query += `uploadId=${uriEscape(uploadId)}`
 
     var method = 'GET'
-    this.makeRequest({method, bucketName, objectName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getListPartsTransformer()
       pipesetup(response, transformer)
@@ -2325,7 +2323,7 @@ export class Client {
     }
     var method = 'GET'
     var transformer = transformers.getListMultipartTransformer()
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return transformer.emit('error', e)
       pipesetup(response, transformer)
     })
@@ -2426,7 +2424,7 @@ export class Client {
     }
     var upload = (query, stream, length, sha256sum, md5sum, cb) => {
       var method = 'PUT'
-      let headers = {'Content-Length': length}
+      let headers = { 'Content-Length': length }
 
       if (!multipart) {
         headers = Object.assign({}, metaData, headers)
@@ -2434,7 +2432,7 @@ export class Client {
 
       if (!this.enableSHA256) headers['Content-MD5'] = md5sum
       this.makeRequestStream(
-        {method, bucketName, objectName, query, headers},
+        { method, bucketName, objectName, query, headers },
         stream,
         sha256sum,
         [200],
@@ -2447,8 +2445,7 @@ export class Client {
             versionId: getVersionId(response.headers),
           }
           // Ignore the 'data' event so that the stream closes. (nodejs stream requirement)
-          response.on('data', () => {
-          })
+          response.on('data', () => {})
           cb(null, result)
         }
       )
@@ -2474,11 +2471,11 @@ export class Client {
     var query = 'notification'
     var builder = new xml2js.Builder({
       rootName: 'NotificationConfiguration',
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
       headless: true,
     })
     var payload = builder.buildObject(config)
-    this.makeRequest({method, bucketName, query}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, payload, [200], '', false, cb)
   }
 
   // Return the list of notification configurations stored
@@ -2497,7 +2494,7 @@ export class Client {
     }
     var method = 'GET'
     var query = 'notification'
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
       var transformer = transformers.getBucketNotificationTransformer()
       var bucketNotification
@@ -2538,7 +2535,7 @@ export class Client {
     var method = 'GET'
     var query = 'versioning'
 
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let versionConfig = Buffer.from('')
@@ -2568,12 +2565,12 @@ export class Client {
     var query = 'versioning'
     var builder = new xml2js.Builder({
       rootName: 'VersioningConfiguration',
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
       headless: true,
     })
     var payload = builder.buildObject(versionConfig)
 
-    this.makeRequest({method, bucketName, query}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, payload, [200], '', false, cb)
   }
 
   /** To set Tags on a bucket or object based on the params
@@ -2586,7 +2583,7 @@ export class Client {
    *  cb(error)` _function_ - callback function with `err` as the error argument. `err` is null if the operation is successful.
    */
   setTagging(taggingParams) {
-    const {bucketName, objectName, tags, putOpts = {}, cb} = taggingParams
+    const { bucketName, objectName, tags, putOpts = {}, cb } = taggingParams
     const method = 'PUT'
     let query = 'tagging'
 
@@ -2595,7 +2592,7 @@ export class Client {
     }
     const tagsList = []
     for (const [key, value] of Object.entries(tags)) {
-      tagsList.push({Key: key, Value: value})
+      tagsList.push({ Key: key, Value: value })
     }
     const taggingConfig = {
       Tagging: {
@@ -2606,11 +2603,11 @@ export class Client {
     }
     const encoder = new TextEncoder()
     const headers = {}
-    const builder = new xml2js.Builder({headless: true, renderOpts: {pretty: false}})
+    const builder = new xml2js.Builder({ headless: true, renderOpts: { pretty: false } })
     let payload = builder.buildObject(taggingConfig)
     payload = encoder.encode(payload)
     headers['Content-MD5'] = toMd5(payload)
-    const requestOptions = {method, bucketName, query, headers}
+    const requestOptions = { method, bucketName, query, headers }
 
     if (objectName) {
       requestOptions['objectName'] = objectName
@@ -2640,7 +2637,7 @@ export class Client {
       throw new errors.InvalidArgumentError('callback should be of type "function"')
     }
 
-    return this.setTagging({bucketName, tags, cb})
+    return this.setTagging({ bucketName, tags, cb })
   }
 
   /** Set Tags on an Object
@@ -2674,7 +2671,7 @@ export class Client {
     if (!isFunction(cb)) {
       throw new TypeError('callback should be of type "function"')
     }
-    return this.setTagging({bucketName, objectName, tags, putOpts, cb})
+    return this.setTagging({ bucketName, objectName, tags, putOpts, cb })
   }
 
   /** Remove Tags on an Bucket/Object based on params
@@ -2684,14 +2681,14 @@ export class Client {
    * removeOpts _object_ (Optional) e.g {versionId:"my-object-version-id"},
    * `cb(error)` _function_ - callback function with `err` as the error argument. `err` is null if the operation is successful.
    */
-  removeTagging({bucketName, objectName, removeOpts, cb}) {
+  removeTagging({ bucketName, objectName, removeOpts, cb }) {
     const method = 'DELETE'
     let query = 'tagging'
 
     if (removeOpts && Object.keys(removeOpts).length && removeOpts.versionId) {
       query = `${query}&versionId=${removeOpts.versionId}`
     }
-    const requestOptions = {method, bucketName, objectName, query}
+    const requestOptions = { method, bucketName, objectName, query }
 
     if (objectName) {
       requestOptions['objectName'] = objectName
@@ -2711,7 +2708,7 @@ export class Client {
     if (!isFunction(cb)) {
       throw new TypeError('callback should be of type "function"')
     }
-    return this.removeTagging({bucketName, cb})
+    return this.removeTagging({ bucketName, cb })
   }
 
   /** Remove tags associated with an object
@@ -2740,7 +2737,7 @@ export class Client {
       throw new TypeError('callback should be of type "function"')
     }
 
-    return this.removeTagging({bucketName, objectName, removeOpts, cb})
+    return this.removeTagging({ bucketName, objectName, removeOpts, cb })
   }
 
   /** Get Tags associated with a Bucket
@@ -2751,7 +2748,7 @@ export class Client {
   getBucketTagging(bucketName, cb) {
     const method = 'GET'
     const query = 'tagging'
-    const requestOptions = {method, bucketName, query}
+    const requestOptions = { method, bucketName, query }
 
     this.makeRequest(requestOptions, '', [200], '', true, (e, response) => {
       var transformer = transformers.getTagsTransformer()
@@ -2794,7 +2791,7 @@ export class Client {
     if (getOpts && getOpts.versionId) {
       query = `${query}&versionId=${getOpts.versionId}`
     }
-    const requestOptions = {method, bucketName, query}
+    const requestOptions = { method, bucketName, query }
     if (objectName) {
       requestOptions['objectName'] = objectName
     }
@@ -2825,11 +2822,11 @@ export class Client {
     const builder = new xml2js.Builder({
       rootName: 'LifecycleConfiguration',
       headless: true,
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
     })
     let payload = builder.buildObject(policyConfig)
     payload = encoder.encode(payload)
-    const requestOptions = {method, bucketName, query, headers}
+    const requestOptions = { method, bucketName, query, headers }
     headers['Content-MD5'] = toMd5(payload)
 
     this.makeRequest(requestOptions, payload, [200], '', false, cb)
@@ -2845,7 +2842,7 @@ export class Client {
     }
     const method = 'DELETE'
     const query = 'lifecycle'
-    this.makeRequest({method, bucketName, query}, '', [204], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, '', [204], '', false, cb)
   }
 
   /** Set/Override lifecycle configuration on a bucket. if the configuration is empty, it removes the configuration.
@@ -2874,7 +2871,7 @@ export class Client {
     }
     const method = 'GET'
     const query = 'lifecycle'
-    const requestOptions = {method, bucketName, query}
+    const requestOptions = { method, bucketName, query }
 
     this.makeRequest(requestOptions, '', [200], '', true, (e, response) => {
       const transformer = transformers.lifecycleTransformer()
@@ -2935,7 +2932,7 @@ export class Client {
 
     const builder = new xml2js.Builder({
       rootName: 'ObjectLockConfiguration',
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
       headless: true,
     })
     const payload = builder.buildObject(config)
@@ -2943,7 +2940,7 @@ export class Client {
     const headers = {}
     headers['Content-MD5'] = toMd5(payload)
 
-    this.makeRequest({method, bucketName, query, headers}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, query, headers }, payload, [200], '', false, cb)
   }
 
   getObjectLockConfig(bucketName, cb) {
@@ -2956,7 +2953,7 @@ export class Client {
     const method = 'GET'
     const query = 'object-lock'
 
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let objectLockConfig = Buffer.from('')
@@ -3009,7 +3006,7 @@ export class Client {
       headers['X-Amz-Bypass-Governance-Retention'] = true
     }
 
-    const builder = new xml2js.Builder({rootName: 'Retention', renderOpts: {pretty: false}, headless: true})
+    const builder = new xml2js.Builder({ rootName: 'Retention', renderOpts: { pretty: false }, headless: true })
     const params = {}
 
     if (retentionOpts.mode) {
@@ -3025,7 +3022,7 @@ export class Client {
     let payload = builder.buildObject(params)
 
     headers['Content-MD5'] = toMd5(payload)
-    this.makeRequest({method, bucketName, objectName, query, headers}, payload, [200, 204], '', false, cb)
+    this.makeRequest({ method, bucketName, objectName, query, headers }, payload, [200, 204], '', false, cb)
   }
 
   getObjectRetention(bucketName, objectName, getOpts, cb) {
@@ -3049,7 +3046,7 @@ export class Client {
       query += `&versionId=${getOpts.versionId}`
     }
 
-    this.makeRequest({method, bucketName, objectName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let retentionConfig = Buffer.from('')
@@ -3099,7 +3096,7 @@ export class Client {
     let query = 'encryption'
     let builder = new xml2js.Builder({
       rootName: 'ServerSideEncryptionConfiguration',
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
       headless: true,
     })
     let payload = builder.buildObject(encryptionObj)
@@ -3107,7 +3104,7 @@ export class Client {
     const headers = {}
     headers['Content-MD5'] = toMd5(payload)
 
-    this.makeRequest({method, bucketName, query, headers}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, query, headers }, payload, [200], '', false, cb)
   }
 
   getBucketEncryption(bucketName, cb) {
@@ -3120,7 +3117,7 @@ export class Client {
     const method = 'GET'
     const query = 'encryption'
 
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let bucketEncConfig = Buffer.from('')
@@ -3145,7 +3142,7 @@ export class Client {
     const method = 'DELETE'
     const query = 'encryption'
 
-    this.makeRequest({method, bucketName, query}, '', [204], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, '', [204], '', false, cb)
   }
 
   setBucketReplication(bucketName, replicationConfig = {}, cb) {
@@ -3179,13 +3176,13 @@ export class Client {
       },
     }
 
-    const builder = new xml2js.Builder({renderOpts: {pretty: false}, headless: true})
+    const builder = new xml2js.Builder({ renderOpts: { pretty: false }, headless: true })
 
     let payload = builder.buildObject(replicationParamsConfig)
 
     headers['Content-MD5'] = toMd5(payload)
 
-    this.makeRequest({method, bucketName, query, headers}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, query, headers }, payload, [200], '', false, cb)
   }
 
   getBucketReplication(bucketName, cb) {
@@ -3198,7 +3195,7 @@ export class Client {
     const method = 'GET'
     const query = 'replication'
 
-    this.makeRequest({method, bucketName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let replicationConfig = Buffer.from('')
@@ -3219,7 +3216,7 @@ export class Client {
     }
     const method = 'DELETE'
     const query = 'replication'
-    this.makeRequest({method, bucketName, query}, '', [200, 204], '', false, cb)
+    this.makeRequest({ method, bucketName, query }, '', [200, 204], '', false, cb)
   }
 
   getObjectLegalHold(bucketName, objectName, getOpts = {}, cb) {
@@ -3252,7 +3249,7 @@ export class Client {
       query += `&versionId=${getOpts.versionId}`
     }
 
-    this.makeRequest({method, bucketName, objectName, query}, '', [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, '', [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let legalHoldConfig = Buffer.from('')
@@ -3315,12 +3312,12 @@ export class Client {
       Status: setOpts.status,
     }
 
-    const builder = new xml2js.Builder({rootName: 'LegalHold', renderOpts: {pretty: false}, headless: true})
+    const builder = new xml2js.Builder({ rootName: 'LegalHold', renderOpts: { pretty: false }, headless: true })
     const payload = builder.buildObject(config)
     const headers = {}
     headers['Content-MD5'] = toMd5(payload)
 
-    this.makeRequest({method, bucketName, objectName, query, headers}, payload, [200], '', false, cb)
+    this.makeRequest({ method, bucketName, objectName, query, headers }, payload, [200], '', false, cb)
   }
 
   async setCredentialsProvider(credentialsProvider) {
@@ -3363,7 +3360,7 @@ export class Client {
     const method = 'DELETE'
     let query = `uploadId=${uploadId}`
 
-    const requestOptions = {method, bucketName, objectName: objectName, query}
+    const requestOptions = { method, bucketName, objectName: objectName, query }
     this.makeRequest(requestOptions, '', [204], '', false, cb)
   }
 
@@ -3378,11 +3375,11 @@ export class Client {
    * @param cb called with null incase of error.
    */
   uploadPartCopy(partConfig, cb) {
-    const {bucketName, objectName, uploadID, partNumber, headers} = partConfig
+    const { bucketName, objectName, uploadID, partNumber, headers } = partConfig
 
     const method = 'PUT'
     let query = `uploadId=${uploadID}&partNumber=${partNumber}`
-    const requestOptions = {method, bucketName, objectName: objectName, query, headers}
+    const requestOptions = { method, bucketName, objectName: objectName, query, headers }
     return this.makeRequest(requestOptions, '', [200], '', true, (e, response) => {
       let partCopyResult = Buffer.from('')
       if (e) return cb(e)
@@ -3519,7 +3516,7 @@ export class Client {
           const uploadPartConfigList = []
 
           splitPartSizeList.forEach((splitSize, splitIndex) => {
-            const {startIndex: startIdx, endIndex: endIdx, objInfo: objConfig} = splitSize
+            const { startIndex: startIdx, endIndex: endIdx, objInfo: objConfig } = splitSize
 
             let partIndex = splitIndex + 1 // part index starts from 1.
             const totalUploads = Array.from(startIdx)
@@ -3556,7 +3553,7 @@ export class Client {
             if (err) {
               return this.abortMultipartUpload(destObjConfig.Bucket, destObjConfig.Object, uploadId, cb)
             }
-            const partsDone = res.map((partCopy) => ({etag: partCopy.etag, part: partCopy.part}))
+            const partsDone = res.map((partCopy) => ({ etag: partCopy.etag, part: partCopy.part }))
             return me.completeMultipartUpload(destObjConfig.Bucket, destObjConfig.Object, uploadId, partsDone, cb)
           })
         }
@@ -3629,21 +3626,21 @@ export class Client {
 
     // Optional
     if (selectOpts.requestProgress) {
-      config.push({RequestProgress: selectOpts.requestProgress})
+      config.push({ RequestProgress: selectOpts.requestProgress })
     }
     // Optional
     if (selectOpts.scanRange) {
-      config.push({ScanRange: selectOpts.scanRange})
+      config.push({ ScanRange: selectOpts.scanRange })
     }
 
     const builder = new xml2js.Builder({
       rootName: 'SelectObjectContentRequest',
-      renderOpts: {pretty: false},
+      renderOpts: { pretty: false },
       headless: true,
     })
     const payload = builder.buildObject(config)
 
-    this.makeRequest({method, bucketName, objectName, query}, payload, [200], '', true, (e, response) => {
+    this.makeRequest({ method, bucketName, objectName, query }, payload, [200], '', true, (e, response) => {
       if (e) return cb(e)
 
       let selectResult
