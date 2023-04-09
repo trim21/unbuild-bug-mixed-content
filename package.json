@@ -8,11 +8,11 @@
   "scripts": {
     "format": "prettier -w src *.js *.json *.cjs",
     "build": "rollup -c rollup.config.cjs",
-    "test": "TS_NODE_PROJECT=./tsconfig.test.json mocha --timeout 5000",
+    "test": "mocha --timeout 5000",
     "lint": "eslint ./src/",
     "lint-fix": " eslint ./src/ --fix",
     "prepublishOnly": "gulp test",
-    "functional": "TS_NODE_PROJECT=./tsconfig.test.json mocha src/test/functional/functional-tests.mjs",
+    "functional": "mocha src/test/functional/functional-tests.mjs",
     "browserify": "browserify ./dist/cjs/minio.js --outfile ./dist/browser/minio.js -s Minio"
   },
   "prettier": {

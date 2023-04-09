@@ -14,7 +14,7 @@ module.exports = {
     getBabelOutputPlugin({ presets: ['@babel/preset-env'] }),
     externals({ builtinsPrefix: 'strip' }),
     typescript({
-      tsconfig: 'tsconfig.build.json',
+      tsconfig: 'tsconfig.json',
     }),
     replace({
       'process.env.MINIO_JS_PACKAGE_VERSION': JSON.stringify(pkg.version),
