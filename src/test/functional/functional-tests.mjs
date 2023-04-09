@@ -27,7 +27,7 @@ import splitFile from "split-file"
 import stream from "stream"
 import superagent from "superagent"
 import url from "url"
-import uuid from "uuid"
+import * as uuid from "uuid"
 
 import AssumeRoleProvider from "../../main/AssumeRoleProvider"
 import {
