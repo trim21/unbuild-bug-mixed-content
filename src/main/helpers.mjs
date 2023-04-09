@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
+import fs from 'fs'
+import path from 'path'
 import stream from 'stream'
+
 import mime from 'mime-types'
+import Crypto from 'crypto-browserify'
+import {XMLParser} from 'fast-xml-parser'
+import ipaddr from 'ipaddr.js'
+import {isBrowser} from 'browser-or-node'
+import _ from 'lodash'
+import querystring from 'query-string'
+
+import * as errors from './errors.ts'
 
 const fxp = new XMLParser()
-import { isBrowser } from 'browser-or-node'
-import _ from 'lodash'
-import * as errors from './errors.ts'
-import querystring from 'query-string'
 
 // Returns a wrapper function that will promisify a given callback function.
 // It will preserve 'this'.
-import Crypto from 'crypto-browserify'
-
-import { XMLParser } from 'fast-xml-parser'
-
-import ipaddr from 'ipaddr.js'
-
-import fs from 'fs'
-
-import path from 'path'
-
 export function promisify(fn) {
   return function () {
     // If the last argument is a function, assume its the callback.
@@ -295,7 +292,8 @@ export function pipesetup(...streams) {
 // return a Readable stream that emits data
 export function readableStream(data) {
   var s = new stream.Readable()
-  s._read = () => {}
+  s._read = () => {
+  }
   s.push(data)
   s.push(null)
   return s
@@ -338,6 +336,7 @@ export function isAmzHeader(key) {
     temp === 'x-amz-server-side-encryption'
   )
 }
+
 // Checks if it is a supported Header
 export function isSupportedHeader(key) {
   var supported_headers = [
@@ -350,6 +349,7 @@ export function isSupportedHeader(key) {
   ]
   return supported_headers.indexOf(key.toLowerCase()) > -1
 }
+
 // Checks if it is a storage header
 export function isStorageclassHeader(key) {
   return key.toLowerCase() === 'x-amz-storage-class'
@@ -380,7 +380,7 @@ export function getSourceVersionId(headers = {}) {
 }
 
 export function sanitizeETag(etag = '') {
-  var replaceChars = { '"': '', '&quot;': '', '&#34;': '', '&QUOT;': '', '&#x00022': '' }
+  var replaceChars = {'"': '', '&quot;': '', '&#34;': '', '&QUOT;': '', '&#x00022': ''}
   return etag.replace(/^("|&quot;|&#34;)|("|&quot;|&#34;)$/g, (m) => replaceChars[m])
 }
 
@@ -616,8 +616,8 @@ export class CopyDestinationOptions {
       headerOptions['X-Amz-Tagging'] = isObject(userTags)
         ? querystring.stringify(userTags)
         : isString(userTags)
-        ? userTags
-        : ''
+          ? userTags
+          : ''
     }
 
     if (!_.isEmpty(this.Mode)) {
@@ -647,6 +647,7 @@ export class CopyDestinationOptions {
     }
     return headerOptions
   }
+
   validate() {
     if (!isValidBucketName(this.Bucket)) {
       throw new errors.InvalidBucketNameError('Invalid Destination bucket name: ' + this.Bucket)
@@ -688,6 +689,7 @@ export const partsRequired = (size) => {
 
 let startIndexParts = []
 let endIndexParts = []
+
 export function calculateEvenSplits(size, objInfo) {
   if (size === 0) {
     return null
@@ -720,7 +722,7 @@ export function calculateEvenSplits(size, objInfo) {
     endIndexParts[i] = currentEnd
   }
 
-  return { startIndex: startIndexParts, endIndex: endIndexParts, objInfo: objInfo }
+  return {startIndex: startIndexParts, endIndex: endIndexParts, objInfo: objInfo}
 }
 
 export function removeDirAndFiles(dirPath, removeSelf) {
@@ -765,6 +767,7 @@ export class SelectResults {
   setStats(stats) {
     this.stats = stats
   }
+
   getStats() {
     return this.stats
   }
@@ -772,6 +775,7 @@ export class SelectResults {
   setProgress(progress) {
     this.progress = progress
   }
+
   getProgress() {
     return this.progress
   }
@@ -779,6 +783,7 @@ export class SelectResults {
   setResponse(response) {
     this.response = response
   }
+
   getResponse() {
     return this.response
   }
